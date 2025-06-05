@@ -1,0 +1,160 @@
+<!-- BMI Calculator Section -->
+<section id="bmi-calculator" class="section bmi-calculator">
+    <div class="container">
+        <div class="section-header">
+            <h2>BMI Calculator</h2>
+            <p>Check your Body Mass Index (BMI) to track your fitness progress</p>
+        </div>
+        <div class="bmi-form">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" placeholder="Enter your height in cm" required>
+            
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter your weight in kg" required>
+            
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            
+            <div id="bmi-result"></div>
+        </div>
+        <button class="switch-button" onclick="switchUnits()">Switch to Feet & Pounds</button>
+    </div>
+</section>
+
+<script>
+    let usingMetric = true;
+    
+    function calculateBMI() {
+        let height, weight;
+        
+        if (usingMetric) {
+            height = document.getElementById('height').value / 100; // Convert cm to meters
+            weight = document.getElementById('weight').value;
+        } else {
+            height = (document.getElementById('height').value * 0.3048); // Convert feet to meters
+            weight = (document.getElementById('weight').value * 0.453592); // Convert pounds to kg
+        }
+        
+        if (height > 0 && weight > 0) {
+            let bmi = (weight / (height * height)).toFixed(2);
+            let category = '';
+            
+            if (bmi < 18.5) {
+                category = 'Underweight';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                category = 'Normal weight';
+            } else if (bmi >= 25 && bmi < 29.9) {
+                category = 'Overweight';
+            } else {
+                category = 'Obese';
+            }
+            
+            document.getElementById('bmi-result').innerHTML = `Your BMI is ${bmi} (${category})`;
+        } else {
+            document.getElementById('bmi-result').innerHTML = 'Please enter valid height and weight values.';
+        }
+    }
+    
+    function switchUnits() {
+        usingMetric = !usingMetric;
+        let heightLabel = document.querySelector("label[for='height']");
+        let weightLabel = document.querySelector("label[for='weight']");
+        let heightInput = document.getElementById('height');
+        let weightInput = document.getElementById('weight');
+        let switchButton = document.querySelector("button[onclick='switchUnits()']");
+
+        if (usingMetric) {
+            heightLabel.innerText = "Height (cm):";
+            weightLabel.innerText = "Weight (kg):";
+            heightInput.placeholder = "Enter your height in cm";
+            weightInput.placeholder = "Enter your weight in kg";
+            switchButton.innerText = "Switch to Feet & Pounds";
+        } else {
+            heightLabel.innerText = "Height (feet):";
+            weightLabel.innerText = "Weight (lbs):";
+            heightInput.placeholder = "Enter your height in feet";
+            weightInput.placeholder = "Enter your weight in lbs";
+            switchButton.innerText = "Switch to cm & kg";
+        }
+    }
+</script>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        color: #333;
+        text-align: center;
+    }
+    .bmi-form {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        margin: auto;
+        transition: transform 0.3s ease-in-out;
+    }
+    .bmi-form:hover {
+        transform: scale(1.05);
+    }
+    .bmi-form label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+    .bmi-form input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .bmi-form button {
+        margin-top: 15px;
+        background: #ff477e;
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 18px;
+        transition: background 0.3s ease;
+        width: 100%;
+    }
+    .bmi-form button:hover {
+        background: #d93666;
+    }
+    #bmi-result {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .switch-button {
+        margin-top: 15px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-size: 18px;
+        transition: background 0.3s ease;
+    }
+    .switch-button:hover {
+        background: #388e3c;
+    }
+    .container {
+        text-align: center;
+        padding: 40px;
+    }
+    .section-header h2 {
+        font-size: 32px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .section-header p {
+        font-size: 18px;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+</style>

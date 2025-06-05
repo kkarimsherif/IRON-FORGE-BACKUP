@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRON-FORGE | Forge Your Strength, Shape Your Future</title>
+    <link rel="stylesheet" href="gym.css">
+    <link rel="stylesheet" href="light-mode-fix.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load Three.js and necessary loaders -->
+    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js"></script>
+    <!-- Load particle system library -->
+    <script src="https://cdn.jsdelivr.net/npm/three-particles@0.3.0/dist/three-particles.min.js"></script>
+    <!-- Preload the dumbbell model -->
+    <link rel="preload" href="dumbbell-animation/dumbbells.glb" as="fetch" crossorigin>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor-container">
+        <div class="cursor"></div>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="img/logo-transparent.png" alt="IRON-FORGE Logo" class="logo">
+                <div class="logo-text">
+                    <span class="logo-name">IRON-FORGE</span>
+                    <span class="logo-slogan">Forge Your Strength, Shape Your Future</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="nightModeToggle" class="action-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="cartToggle" class="action-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+            </div>
+            
+            <nav class="navbar">
+                <ul class="nav-links">
+                        <li><a href="#memberships">Memberships</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#classes">Classes</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="join.html" class="login-link" target="_blank">JOIN NOW</a></li> 
+                </ul>
+            </nav>
+            
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Dumbbell Animation Section -->
+    <section id="dumbbell-animation" class="section dumbbell-animation">
+        <div class="animation-container">
+            <div id="canvas-container" class="canvas-container">
+                <!-- 3D Canvas will be rendered here -->
+            </div>
+            <div class="animation-intro">
+                <h2 class="forge-text">
+                    FORGE YOUR <span>STRENGTH</span>
+                    <div class="model-container" id="forgeModelContainer"></div>
+                </h2>
+                <p>Experience the power of IRON-FORGE</p>
+            </div>
+        </div>
+    </section>
+    
+    <!--hero section-->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>NO <span>JUDGMENTS</span> HERE</h1>
+                <p>Premium fitness experience at a price everyone can afford</p>
+                <div class="hero-buttons">
+                    <a href="join.html" class="login-link btn-primary" target="_blank">JOIN NOW</a> 
+                    <a href="#memberships" class="btn-secondary">View Memberships</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Section -->
+    <section id="memberships" class="section memberships">
+        <div class="container">
+            <div class="section-header">
+                <h2>Membership Plans</h2>
+                <p>Find the perfect plan for your fitness journey</p>
+            </div>
+            <div class="membership-cards">
+                <div class="membership-card">
+                    <div class="membership-header">
+                        <h3>Basic</h3>
+                        <div class="price">$10<span>/month</span></div>
+                    </div>
+                    <div class="membership-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Unlimited Access to Home Club</li>
+                            <li><i class="fas fa-check"></i> Free WiFi Access</li>
+                            <li><i class="fas fa-check"></i> Free Fitness Training</li>
+                            <li><i class="fas fa-times"></i> Fitness Training Plan</li>
+                            <li><i class="fas fa-times"></i> Unlimited Invitations</li>
+                            <li><i class="fas fa-times"></i> Hydromassage</li>
+                            <li><i class="fas fa-times"></i> Tanning</li>
+                        </ul>
+                    </div>
+                    <a href="join.html" class="login-link btn-join" target="_blank">SELECT</a>
+                </div>
+                
+                <div class="membership-card featured">
+                    <div class="featured-label">Most Popular</div>
+                    <div class="membership-header">
+                        <h3>Black Card®</h3>
+                        <div class="price">$24<span>/month</span></div>
+                    </div>
+                    <div class="membership-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Full Access to Any IRON-FORGE Branch</li>
+                            <li><i class="fas fa-check"></i> Free WiFi Access</li>
+                            <li><i class="fas fa-check"></i> Free Fitness Training</li>
+                            <li><i class="fas fa-check"></i> Fitness Training Plan</li>
+                            <li><i class="fas fa-check"></i> Unlimited Invitations</li>
+                            <li><i class="fas fa-check"></i> Hydromassage</li>
+                            <li><i class="fas fa-check"></i> Tanning & Red Light Therapy</li>
+                        </ul>
+                    </div>
+                    <a href="join.html" class="login-link btn-join" target="_blank">SELECT</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <div class="iron-forge-title">
+                <h2>IRON-FORGE</h2>
+                <h3>ABOUT IRON-FORGE</h3>
+            </div>
+            
+            <div class="about-iron-forge">
+                <div class="about-philosophy">
+                    <p>At IRON-FORGE, we believe fitness is more than just physical transformation. It's about forging mental resilience, building discipline, and shaping your best self.</p>
+                    <p>Founded in 2015, we've helped thousands of members achieve their fitness goals through our unique approach combining strength training, nutrition, and community support.</p>
+                    <span class="tagline">Where strength meets purpose</span>
+                </div>
+                
+                <div class="about-icons">
+                    <div class="about-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="about-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="about-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Philosophy</h3>
+                    <p>At IRON-FORGE, we believe fitness is more than just physical transformation. It's about forging mental resilience, building discipline, and shaping your best self.</p>
+                    <p>Founded in 2015, we've helped thousands of members achieve their fitness goals through our unique approach combining strength training, nutrition, and community support.</p>
+                    <div class="about-badges">
+                        <div class="badge">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Judgment Free Zone</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-users"></i>
+                            <span>Community First</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Affordable Fitness</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="img/background.jpg" alt="IRON-FORGE Gym Interior">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section services">
+        <div class="container">
+            <div class="services-title">
+                <h2>OUR SERVICES</h2>
+                <p class="services-subtitle">Comprehensive fitness solutions</p>
+            </div>
+            
+
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3>Personal Training</h3>
+                    <p>One-on-one sessions with certified trainers tailored to your goals.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Group Classes</h3>
+                    <p>Dynamic group workouts for all fitness levels in a motivating environment.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Nutrition Plans</h3>
+                    <p>Customized meal plans to complement your training regimen.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>Cardio Zone</h3>
+                    <p>State-of-the-art cardio equipment with immersive training experiences.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3>Strength Training</h3>
+                    <p>Comprehensive strength equipment for all levels of lifters.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Recovery Services</h3>
+                    <p>Massage, cryotherapy and other recovery modalities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes" class="section classes">
+        <div class="container">
+            <div class="classes-title">
+                <h2>Classes</h2>
+                <p class="classes-subtitle">Find your perfect workout</p>
+            </div>
+            <div class="classes-filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="strength">Strength</button>
+                <button class="filter-btn" data-filter="cardio">Cardio</button>
+                <button class="filter-btn" data-filter="hiit">HIIT</button>
+                <button class="filter-btn" data-filter="recovery">Recovery</button>
+            </div>
+            <div class="classes-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- App Promo Section -->
+    <section id="app-promo" class="section app-promo">
+        <div class="container">
+            <div class="app-promo-content">
+                <div class="app-promo-title">
+                    <h2>Take IRON-FORGE With You</h2>
+                    <p>Download our app to manage your membership, book classes, and track your progress on the go.</p>
+                    <div class="app-buttons">
+                        <a href="#" class="app-button">
+                            <i class="fab fa-apple"></i>
+                            <span>App Store</span>
+                        </a>
+                        <a href="#" class="app-button">
+                            <i class="fab fa-google-play"></i>
+                            <span>Google Play</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="app-promo-image">
+                    <img src="img/background.jpg" alt="IRON-FORGE App Screenshot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="section products">
+        <div class="container">
+            <div class="products-title">
+                <h2>PREMIUM PRODUCTS</h2>
+                <p class="products-subtitle">Enhance your fitness journey</p>
+            </div>
+            
+            
+            <div class="products-grid">
+               <!-- Product 1 -->
+               <div class="product-card">
+                <div class="product-icon">
+                    <img src="img/Weight Lifting Belt.avif" alt="Weight Lifting Belt" class="product-img">
+                </div>
+                <h3>Weight Lifting Belt</h3>
+                <p class="product-price">$49.99</p>
+                <button class="btn-add-to-cart">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="product-icon">
+                    <img src="img/Lifting Straps.avif" alt="Lifting Straps" class="product-img">
+                </div>
+                <h3>Lifting Straps</h3>
+                <p class="product-price">$19.99</p>
+                <button class="btn-add-to-cart">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-icon">
+                    <img src="img/Whey Protein.png" alt="Whey Protein" class="product-img">
+                </div>
+                <h3>Whey Protein</h3>
+                <p class="product-price">$39.99</p>
+                <button class="btn-add-to-cart">ADD TO CART</button>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-icon">
+                    <img src="img/classic-shaker-500-ml-black.avif" alt="Shaker Bottle" class="product-img">
+                </div>
+                <h3>Shaker Bottle</h3>
+                <p class="product-price">$14.99</p>
+                <button class="btn-add-to-cart">ADD TO CART</button>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section testimonials">
+        <div class="container">
+            <div class="testimonials-title">
+                <h2>Members Stories</h2>
+                <p class="testimonials-subtitle">Real results from real people</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-image">
+                        <img src="img/background.jpg" alt="Testimonial">
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="testimonial-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"IRON-FORGE changed my life. The supportive environment and affordable membership helped me lose 50 pounds and gain confidence!"</p>
+                        <h4>Sarah K.</h4>
+                        <span>Member since 2020</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-image">
+                        <img src="img/background.jpg" alt="Testimonial">
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="testimonial-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"The Black Card membership is amazing! I can bring my workout buddy anytime and we both love the hydromassage after intense workouts."</p>
+                        <h4>Michael T.</h4>
+                        <span>Member since 2021</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <div class="contact-title">
+                <h2>Contact Us</h2>
+                <p class="contact-subtitle">We'd love to hear from you</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>123 Fitness Street, Iron District</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>(555) 123-4567</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>info@ironforge.com</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <p>Mon-Fri: 5AM - 11PM<br>Sat-Sun: 7AM - 9PM</p>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div class="payment-modal" id="paymentModal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Complete Your Membership</h2>
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="johnsmith@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="membership">Membership Plan</label>
+                        <select id="membership" required>
+                            <option value="">Select a plan</option>
+                            <option value="basic">Basic ($10/month)</option>
+                            <option value="black">Black Card® ($24/month)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <input type="radio" id="creditCard" name="payment" value="credit" checked>
+                                <label for="creditCard"><i class="far fa-credit-card"></i> Credit Card</label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="paypal" name="payment" value="paypal">
+                                <label for="paypal"><i class="fab fa-paypal"></i> PayPal</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="credit-card-info" id="creditCardInfo">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" id="expiry" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Complete Registration</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Registration Successful!</h2>
+            <p>Thank you for joining IRON-FORGE. Your membership has been activated.</p>
+            <button id="closeSuccessModal" class="btn-primary">Get Started</button>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Your Cart</h2>
+            <div id="cartItems">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <div class="cart-total-container">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button id="checkoutBtn" class="btn-primary">Checkout</button>
+        </div>
+    </div>
+    
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h3>IRON-FORGE</h3>
+                    <p>Forging strength and shaping futures since 2015.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#memberships">Memberships</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#classes">Classes</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe for workout tips and exclusive offers</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 IRON-FORGE. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+    </footer>
+
+    <script src="gym.js"></script>
+</body>
+</html>
