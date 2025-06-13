@@ -1,3 +1,4 @@
+console.log('join js.js loaded');
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize Finisher Header
     new FinisherHeader({
@@ -260,6 +261,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Expose function globally (optional)
     window.togglePassword = togglePassword;
+
+    // Intercept login form submission for AJAX validation
+    const loginForm = document.querySelector('.sign-in-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const emailInput = loginForm.querySelector('input[type="email"]');
+            const passwordInput = loginForm.querySelector('input[type="password"]');
+            const forgetLink = loginForm.querySelector('.Forget');
+            // Remove any previous error message above the forget link
+            let customError = loginForm.querySelector('.custom-login-error');
+            if (customError) customError.remove();
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'custom-login-error';
+                    errorDiv.style.color = '#dc3545';
+                    errorDiv.style.margin = '8px 0 0 0';
+                    errorDiv.style.fontSize = '14px';
+                    errorDiv.textContent = (data.error && data.error.message === 'Incorrect email or password')
+                        ? 'Password is incorrect, please re-enter.'
+                        : (data.error && data.error.message)
+                            ? data.error.message
+                            : 'Login failed. Please try again.';
+                    forgetLink.parentNode.insertBefore(errorDiv, forgetLink);
+                } else {
+                    // Login successful, redirect to home or dashboard
+                    window.location.href = '/';
+                }
+            } catch (err) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'custom-login-error';
+                errorDiv.style.color = '#dc3545';
+                errorDiv.style.margin = '8px 0 0 0';
+                errorDiv.style.fontSize = '14px';
+                errorDiv.textContent = 'An error occurred. Please try again.';
+                forgetLink.parentNode.insertBefore(errorDiv, forgetLink);
+            }
+        });
+    }
 });
 
 
