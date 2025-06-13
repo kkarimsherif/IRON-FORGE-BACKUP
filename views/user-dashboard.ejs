@@ -5,7 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel="stylesheet" href="/gym.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load Three.js and necessary loaders -->
+    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js"></script>
+    <!-- Load particle system library -->
+    <script src="https://cdn.jsdelivr.net/npm/three-particles@0.3.0/dist/three-particles.min.js"></script>
+    <!-- Preload the dumbbell model -->
+    <link rel="preload" href="dumbbell-animation/dumbbells.glb" as="fetch" crossorigin>
+
     <style>
         :root {
             --primary-color: #ff6b00;
@@ -15,6 +26,15 @@
             --card-bg: #1a1a1a;
         }
         
+        body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--secondary);
+    color: var(--text-color);
+    line-height: 1.6;
+    cursor: none; /* Hide default cursor */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
         .dashboard-container {
             max-width: 1200px;
             margin: 40px auto;
@@ -310,8 +330,13 @@
     </style>
 </head>
 <body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor-container">
+        <div class="cursor"></div>
+    </div>
+
     <%- include('partials/navbar') %>
-    
+
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div class="welcome-text">

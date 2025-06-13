@@ -1,0 +1,180 @@
+<!-- Product Modal -->
+<div class="modal" id="product-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Product</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <select id="product-category" required>
+                        <option value="">Select Category</option>
+                        <option value="equipment">Equipment</option>
+                        <option value="supplements">Supplements</option>
+                        <option value="apparel">Apparel</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">Price ($)</label>
+                        <input type="number" id="product-price" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-stock">Stock Quantity</label>
+                        <input type="number" id="product-stock" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Product Image</label>
+                    <input type="file" id="product-image" accept="image/*">
+                    <div class="image-preview" id="image-preview"></div>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="product-featured">
+                    <label for="product-featured">Featured Product</label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal" id="order-details-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Order Details</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="order-details-content">
+            <!-- Order details will be loaded here dynamically -->
+        </div>
+    </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal" id="user-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New User</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="user-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-first-name">First Name</label>
+                        <input type="text" id="user-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-last-name">Last Name</label>
+                        <input type="text" id="user-last-name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-phone">Phone Number</label>
+                        <input type="text" id="user-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-role">Role</label>
+                        <select id="user-role" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Password</label>
+                    <input type="password" id="user-password" required>
+                    <small>Leave blank if updating an existing user and not changing password</small>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="user-active" checked>
+                    <label for="user-active">Active Account</label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- User Details Modal -->
+<div class="modal" id="user-details-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>User Details</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="user-details-content">
+            <!-- User details will be loaded here dynamically -->
+        </div>
+    </div>
+</div>
+
+<!-- Subscription Plan Modal -->
+<div class="modal" id="subscription-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Subscription Plan</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="subscription-form">
+                <div class="form-group">
+                    <label for="plan-name">Plan Name</label>
+                    <input type="text" id="plan-name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plan-price">Monthly Price ($)</label>
+                        <input type="number" id="plan-price" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan-duration">Duration (months)</label>
+                        <input type="number" id="plan-duration" min="1" value="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="plan-description">Description</label>
+                    <textarea id="plan-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Features (one per line)</label>
+                    <textarea id="plan-features" rows="5" required></textarea>
+                    <small>Start with "+" for included features or "-" for excluded features</small>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="plan-active" checked>
+                    <label for="plan-active">Active Plan</label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Plan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
