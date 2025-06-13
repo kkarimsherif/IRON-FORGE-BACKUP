@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/gym.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff6b00;
+            --secondary-color: #121212;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --card-bg: #1a1a1a;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: var(--text-color);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .welcome-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .welcome-text span {
+            color: var(--primary-color);
+        }
+        
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .action-btn i {
+            margin-right: 8px;
+        }
+        
+        .action-btn:hover {
+            background: #ff8c00;
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 107, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        
+        .membership-status {
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+        
+        .status-expired {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+        }
+        
+        .membership-info, .fitness-info {
+            margin-top: 15px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: #999;
+        }
+        
+        .renew-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .renew-btn:hover {
+            background: #ff8c00;
+        }
+        
+        .bmi-chart {
+            height: 200px;
+            margin-top: 20px;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .order-amount {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .class-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .class-item:last-child {
+            border-bottom: none;
+        }
+        
+        .class-date {
+            flex: 0 0 35px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            margin-right: 15px;
+        }
+        
+        .class-day {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .class-month {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .class-details {
+            flex: 1;
+        }
+        
+        .class-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .class-time {
+            color: #999;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .class-time i {
+            margin-right: 5px;
+        }
+        
+        .dashboard-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .section-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-link i {
+            margin-left: 5px;
+        }
+        
+        .goal-progress {
+            margin-top: 20px;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #222;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        
+        .no-classes, .no-orders {
+            color: #999;
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="welcome-text">
+                Welcome, <span><%= user.name || 'Member' %></span>!
+            </div>
+            <div class="dashboard-actions">
+                <a href="/user-profile" class="action-btn">
+                    <i class="fas fa-user-cog"></i> Edit Profile
+                </a>
+                <form action="/auth/logout" method="POST" style="margin: 0;">
+                    <button type="submit" class="action-btn">
+                        <i class="fas fa-sign-out-alt"></i> Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">Membership</div>
+                    <div class="card-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                </div>
+                
+                <div class="membership-status status-active">Active</div>
+                
+                <div class="membership-info">
+                    <div class="info-row">
+                        <span class="info-label">Membership Type:</span>
+                        <span><%= user.membership && user.membership.type || 'Basic' %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Start Date:</span>
+                        <span><%= user.membership ? new Date(user.membership.startDate).toLocaleDateString() : new Date().toLocaleDateString() %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Renewal Date:</span>
+                        <span><%= user.membership ? new Date(user.membership.renewalDate).toLocaleDateString() : new Date(new Date().setMonth(new Date().getMonth() + 1)).toLocaleDateString() %></span>
+                    </div>
+                </div>
+                
+                <a href="/memberships" class="renew-btn">Manage Membership</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">Fitness Summary</div>
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                
+                <div class="fitness-info">
+                    <div class="info-row">
+                        <span class="info-label">Latest BMI:</span>
+                        <span><%= user.bmi ? user.bmi.value : '—' %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span><%= user.bmi ? user.bmi.category : '—' %></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Last Updated:</span>
+                        <span><%= user.bmi ? new Date(user.bmi.date).toLocaleDateString() : '—' %></span>
+                    </div>
+                </div>
+                
+                <div class="goal-progress">
+                    <div class="info-row">
+                        <span>Weight Goal Progress</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 65%"></div>
+                    </div>
+                </div>
+                
+                <a href="/bmi" class="renew-btn">Calculate BMI</a>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-title">Recent Orders</div>
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <% if (locals.orders && orders.length > 0) { %>
+                    <% orders.slice(0, 3).forEach(order => { %>
+                        <div class="order-item">
+                            <div>
+                                <div>Order #<%= order.id.substring(0, 8) %></div>
+                                <div class="order-date"><%= new Date(order.date).toLocaleDateString() %></div>
+                            </div>
+                            <div class="order-amount">EGP <%= order.amount.toFixed(2) %></div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-orders">
+                        <p>No recent orders</p>
+                    </div>
+                <% } %>
+                
+                <a href="/orders" class="renew-btn">View All Orders</a>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="section-header">
+                <div class="section-title">Upcoming Classes</div>
+                <a href="/classes" class="section-link">
+                    View all classes <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <div class="dashboard-card">
+                <% if (locals.classes && classes.length > 0) { %>
+                    <% classes.forEach(gymClass => { %>
+                        <div class="class-item">
+                            <div class="class-date">
+                                <span class="class-day"><%= new Date(gymClass.date).getDate() %></span>
+                                <span class="class-month"><%= new Date(gymClass.date).toLocaleString('default', { month: 'short' }) %></span>
+                            </div>
+                            <div class="class-details">
+                                <div class="class-name"><%= gymClass.name %></div>
+                                <div class="class-time">
+                                    <i class="far fa-clock"></i>
+                                    <%= new Date(gymClass.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                                    - <%= gymClass.trainer %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-classes">
+                        <p>You don't have any upcoming classes</p>
+                        <a href="/classes" class="renew-btn" style="margin-top: 15px;">Browse Classes</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <%- include('partials/footer') %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // You can add JavaScript for interactive features here
+    </script>
+</body>
+</html> 

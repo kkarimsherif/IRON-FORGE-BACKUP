@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | IRON-FORGE</title>
+    <link rel="stylesheet" href="/gym.css">
+    <link rel="stylesheet" href="/user-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--secondary);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1e2130;
+            color: #fff;
+            padding: 30px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+
+        body.night-mode .main-content {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            color: #ff5e14;
+            font-size: 24px;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-header p {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ff5e14;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #fff;
+            background-color: #ff5e14;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            margin: 10px 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .membership-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background-color: #ffc107;
+            color: #000;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .membership-badge.premium {
+            background-color: #ff5e14;
+            color: #fff;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .nav-menu li {
+            padding: 0;
+            margin: 5px 0;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #aaa;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-menu li a:hover {
+            background-color: rgba(255, 94, 20, 0.1);
+            color: #ff5e14;
+        }
+
+        .nav-menu li a.active {
+            background-color: rgba(255, 94, 20, 0.2);
+            color: #ff5e14;
+            border-left: 4px solid #ff5e14;
+        }
+
+        .nav-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .back-link {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .back-link a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-link a:hover {
+            color: #ff5e14;
+        }
+
+        .back-link a i {
+            margin-right: 5px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        body.night-mode .profile-title {
+            color: #fff;
+        }
+
+        .profile-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        body.night-mode .profile-card {
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #ff5e14;
+            overflow: hidden;
+            margin-right: 30px;
+            position: relative;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #ff5e14;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-picture-edit:hover {
+            background-color: #e04700;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        body.night-mode .profile-info h2 {
+            color: #fff;
+        }
+
+        .profile-info p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        body.night-mode .profile-info p {
+            color: #aaa;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        body.night-mode .profile-tabs {
+            border-bottom: 1px solid #333;
+        }
+
+        .profile-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            color: #777;
+        }
+
+        body.night-mode .profile-tab {
+            color: #aaa;
+        }
+
+        .profile-tab.active {
+            border-bottom: 2px solid #ff5e14;
+            color: #ff5e14;
+            font-weight: 600;
+        }
+
+        .profile-tab:hover {
+            color: #ff5e14;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        body.night-mode .form-group label {
+            color: #ccc;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        body.night-mode .form-control {
+            background-color: #333;
+            border-color: #444;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            border-color: #ff5e14;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 94, 20, 0.2);
+        }
+
+        .btn-save {
+            background-color: #ff5e14;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #e04700;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 20px 0;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .profile-header-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-picture {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="<%= locals.nightMode ? 'night-mode' : '' %>">
+    <%- include('partials/navbar') %>
+
+    <div class="profile-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-avatar">
+                    <% if (locals.user && user.profilePicture) { %>
+                        <img src="<%= user.profilePicture %>" alt="Profile Picture">
+                    <% } else { %>
+                        <i class="fas fa-user-circle"></i>
+                    <% } %>
+                </div>
+                <div class="user-name"><%= locals.user ? user.name : 'User' %></div>
+                <div class="membership-badge <%= user.membership && user.membership.type === 'black' ? 'premium' : '' %>">
+                    <%= user.membership ? user.membership.type.charAt(0).toUpperCase() + user.membership.type.slice(1) : 'Basic' %>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/user-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/user-profile" class="active"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="/user-membership"><i class="fas fa-id-card"></i> Membership</a></li>
+                <li><a href="/user-classes"><i class="fas fa-dumbbell"></i> My Classes</a></li>
+                <li><a href="/user-orders"><i class="fas fa-shopping-bag"></i> Order History</a></li>
+                <li><a href="/user-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li>
+                    <form action="/auth/logout" method="POST" style="margin: 0;">
+                        <button type="submit" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer; padding: 12px 20px; display: flex; align-items: center;">
+                            <i class="fas fa-sign-out-alt" style="margin-right: 10px; width: 20px; text-align: center;"></i>
+                            <span style="color: #aaa;">Logout</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+            <div class="back-link">
+                <a href="/"><i class="fas fa-arrow-left"></i> Back to Website</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="profile-header">
+                <h1 class="profile-title">My Profile</h1>
+            </div>
+
+            <div class="profile-card">
+                <div class="profile-header-card">
+                    <div class="profile-picture">
+                        <% if (locals.user && user.profilePicture) { %>
+                            <img src="<%= user.profilePicture %>" alt="Profile Picture">
+                        <% } else { %>
+                            <img src="https://via.placeholder.com/150" alt="Profile Picture">
+                        <% } %>
+                        <div class="profile-picture-edit" title="Change Profile Picture">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h2><%= locals.user ? user.name : 'User' %></h2>
+                        <p><%= locals.user ? user.email : 'user@example.com' %></p>
+                        <p>Member since: <%= locals.user && user.createdAt ? new Date(user.createdAt).toLocaleDateString() : new Date().toLocaleDateString() %></p>
+                    </div>
+                </div>
+
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="personal-info">Personal Information</div>
+                    <div class="profile-tab" data-tab="fitness-stats">Fitness Stats</div>
+                    <div class="profile-tab" data-tab="security">Security</div>
+                </div>
+
+                <div class="tab-content active" id="personal-info">
+                    <form action="/user/profile" method="POST" id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="name" class="form-control" value="<%= locals.user ? user.name : '' %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="tel" id="phoneNumber" name="phone" class="form-control" value="<%= locals.user && user.phone ? user.phone : '' %>">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" name="address" class="form-control" value="<%= locals.user && user.address ? user.address : '' %>">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city" class="form-control" value="<%= locals.user && user.city ? user.city : '' %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Province</label>
+                                <input type="text" id="state" name="state" class="form-control" value="<%= locals.user && user.state ? user.state : '' %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">ZIP/Postal Code</label>
+                                <input type="text" id="zipCode" name="zipCode" class="form-control" value="<%= locals.user && user.zipCode ? user.zipCode : '' %>">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="emergencyContact">Emergency Contact</label>
+                                <input type="text" id="emergencyContact" name="emergencyContact" class="form-control" value="<%= locals.user && user.emergencyContact ? user.emergencyContact : '' %>">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-save">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="tab-content" id="fitness-stats">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" name="height" class="form-control" value="<%= locals.user && user.height ? user.height : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" class="form-control" value="<%= locals.user && user.weight ? user.weight : '' %>">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bmi">BMI</label>
+                            <input type="text" id="bmi" class="form-control" value="<%= locals.user && user.bmi ? user.bmi.value : '—' %>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="bmiCategory">BMI Category</label>
+                            <input type="text" id="bmiCategory" class="form-control" value="<%= locals.user && user.bmi ? user.bmi.category : '—' %>" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fitnessGoal">Fitness Goal</label>
+                            <select id="fitnessGoal" name="fitnessGoal" class="form-control">
+                                <option value="weight-loss" <%= locals.user && user.fitnessGoal === 'weight-loss' ? 'selected' : '' %>>Weight Loss</option>
+                                <option value="muscle-gain" <%= locals.user && user.fitnessGoal === 'muscle-gain' ? 'selected' : '' %>>Muscle Gain</option>
+                                <option value="endurance" <%= locals.user && user.fitnessGoal === 'endurance' ? 'selected' : '' %>>Endurance</option>
+                                <option value="flexibility" <%= locals.user && user.fitnessGoal === 'flexibility' ? 'selected' : '' %>>Flexibility</option>
+                                <option value="general-fitness" <%= locals.user && user.fitnessGoal === 'general-fitness' ? 'selected' : '' %>>General Fitness</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-save" id="saveFitnessStats">Save Changes</button>
+                </div>
+
+                <div class="tab-content" id="security">
+                    <form action="/user/change-password" method="POST" id="passwordForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-save">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.profile-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the corresponding tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Profile picture upload
+            const profilePictureEdit = document.querySelector('.profile-picture-edit');
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+
+            profilePictureEdit.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.querySelectorAll('.profile-picture img').forEach(img => {
+                            img.src = e.target.result;
+                        });
+                        
+                        // Here you would typically upload the image to the server
+                        // using AJAX/fetch and update the user's profile picture
+                        const formData = new FormData();
+                        formData.append('profilePicture', fileInput.files[0]);
+                        
+                        fetch('/user/profile-picture', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Form submissions
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                fetch('/user/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Profile updated successfully');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating your profile');
+                });
+            });
+
+            document.getElementById('saveFitnessStats').addEventListener('click', function() {
+                const height = document.getElementById('height').value;
+                const weight = document.getElementById('weight').value;
+                const fitnessGoal = document.getElementById('fitnessGoal').value;
+                
+                fetch('/user/fitness-stats', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ height, weight, fitnessGoal })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update BMI if returned
+                    if (data.bmi) {
+                        document.getElementById('bmi').value = data.bmi.value;
+                        document.getElementById('bmiCategory').value = data.bmi.category;
+                    }
+                    alert('Fitness stats updated successfully');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating your fitness stats');
+                });
+            });
+
+            document.getElementById('passwordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (newPassword !== confirmPassword) {
+                    alert('New passwords do not match');
+                    return;
+                }
+                
+                fetch('/user/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Password changed successfully');
+                        document.getElementById('passwordForm').reset();
+                    } else {
+                        alert(data.message || 'An error occurred');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while changing your password');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

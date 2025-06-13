@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/gym.css">
+    <style>
+        .success-container {
+            max-width: 800px;
+            margin: 150px auto;
+            padding: 50px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .order-details {
+            margin-top: 30px;
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .order-detail {
+            margin-bottom: 10px;
+        }
+        
+        .back-btn {
+            background-color: #ff6b00;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background-color: #ff8c00;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <main>
+        <div class="success-container">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Payment Successful!</h2>
+            <p>Thank you for your purchase. Your transaction has been completed successfully.</p>
+            
+            <div class="order-details">
+                <h3>Order Details:</h3>
+                <div id="order-info">
+                    <% if (order) { %>
+                        <p class="order-detail">Order ID: <%= order.id %></p>
+                        <p class="order-detail">Date: <%= new Date(order.date).toLocaleDateString() %> <%= new Date(order.date).toLocaleTimeString() %></p>
+                        <p class="order-detail">Amount: EGP <%= order.amount.toFixed(2) %></p>
+                    <% } else { %>
+                        <p class="order-detail" id="order-id">Order ID: Retrieved from local storage</p>
+                        <p class="order-detail" id="order-date">Date: <%= new Date().toLocaleDateString() %></p>
+                        <p class="order-detail" id="order-amount">Amount: Loading...</p>
+                    <% } %>
+                </div>
+            </div>
+            
+            <a href="/" class="back-btn">Return to Homepage</a>
+        </div>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <% if (!order) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the order ID from localStorage
+            const orderId = localStorage.getItem('lastOrderId');
+            
+            if (orderId) {
+                document.getElementById('order-id').textContent = `Order ID: ${orderId}`;
+                
+                // Try to fetch order details from API
+                fetch(`/api/payments/status/${orderId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.order) {
+                            const amount = data.order.amount_cents / 100;
+                            document.getElementById('order-amount').textContent = `Amount: EGP ${amount.toFixed(2)}`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching order details:', error);
+                    });
+            }
+        });
+    </script>
+    <% } %>
+</body>
+</html> 

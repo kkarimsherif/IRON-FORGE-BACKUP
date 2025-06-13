@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+        }
+        .fix-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 10px;
+            z-index: 9999;
+            text-align: center;
+        }
+        .fix-nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 15px;
+            border-radius: 3px;
+            background: #ff6b00;
+        }
+    </style>
+</head>
+<body>
+    <div class="fix-nav">
+        Emergency Navigation: 
+        <a href="/">Home</a>
+        <a href="/user-dashboard">Dashboard</a>
+        <a href="/user-profile">Profile</a>
+    </div>
+</body>
+</html> 

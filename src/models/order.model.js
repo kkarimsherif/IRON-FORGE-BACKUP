@@ -1,96 +1,112 @@
 const mongoose = require('mongoose');
+const { ORDER_STATUS } = require('../config/constants');
+
+const orderItemSchema = new mongoose.Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: [1, 'Quantity must be at least 1'],
+  },
+});
 
 const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'An order must belong to a user']
+    required: true,
   },
-  items: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        required: [true, 'Order item must have a product']
-      },
-      quantity: {
-        type: Number,
-        required: [true, 'Order item must have a quantity'],
-        min: [1, 'Quantity must be at least 1']
-      },
-      price: {
-        type: Number,
-        required: [true, 'Order item must have a price']
-      },
-      // Store the name and other product info in case the product changes later
-      productSnapshot: {
-        name: String,
-        category: String,
-        image: String
-      }
-    }
-  ],
-  totalAmount: {
-    type: Number,
-    required: [true, 'An order must have a total amount']
-  },
-  status: {
-    type: String,
-    enum: {
-      values: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
-      message: 'Status must be one of: pending, processing, shipped, delivered, cancelled'
+  items: [orderItemSchema],
+  shippingAddress: {
+    firstName: {
+      type: String,
+      required: [true, 'First name is required'],
     },
-    default: 'pending'
-  },
-  paymentStatus: {
-    type: String,
-    enum: {
-      values: ['pending', 'paid', 'failed', 'refunded'],
-      message: 'Payment status must be one of: pending, paid, failed, refunded'
+    lastName: {
+      type: String,
+      required: [true, 'Last name is required'],
     },
-    default: 'pending'
+    address: {
+      type: String,
+      required: [true, 'Address is required'],
+    },
+    city: {
+      type: String,
+      required: [true, 'City is required'],
+    },
+    postalCode: {
+      type: String,
+      required: [true, 'Postal code is required'],
+    },
+    phone: {
+      type: String,
+      required: [true, 'Phone number is required'],
+    },
   },
   paymentMethod: {
     type: String,
-    enum: {
-      values: ['credit-card', 'paypal', 'cash', 'bank-transfer', 'other'],
-      message: 'Payment method must be one of: credit-card, paypal, cash, bank-transfer, other'
-    },
-    default: 'credit-card'
+    required: [true, 'Payment method is required'],
+    enum: ['credit-card', 'cash', 'paypal'],
   },
-  paymentDetails: {
-    transactionId: String,
-    provider: String
+  paymentResult: {
+    id: String,
+    status: String,
+    update_time: String,
+    email_address: String,
   },
-  shippingAddress: {
-    street: String,
-    city: String,
-    state: String,
-    postalCode: String,
-    country: String,
-    phone: String
-  },
-  discountApplied: {
+  subtotal: {
     type: Number,
-    default: 0
+    required: true,
+    min: [0, 'Subtotal cannot be negative'],
   },
-  membershipDiscount: {
+  shippingCost: {
+    type: Number,
+    required: true,
+    min: [0, 'Shipping cost cannot be negative'],
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: [0, 'Total amount cannot be negative'],
+  },
+  status: {
+    type: String,
+    enum: Object.values(ORDER_STATUS),
+    default: ORDER_STATUS.PENDING,
+  },
+  isPaid: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  notes: String,
+  paidAt: Date,
+  isDelivered: {
+    type: Boolean,
+    default: false,
+  },
+  deliveredAt: Date,
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now,
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now()
-  }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+});
+
+// Virtual for formatted total
+orderSchema.virtual('formattedTotal').get(function() {
+  return `$${this.totalAmount.toFixed(2)}`;
 });
 
 // Pre-find middleware to populate the user reference
@@ -131,6 +147,4 @@ orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ paymentStatus: 1 });
 
-const Order = mongoose.model('Order', orderSchema);
-
-module.exports = Order; 
+module.exports = mongoose.model('Order', orderSchema); 

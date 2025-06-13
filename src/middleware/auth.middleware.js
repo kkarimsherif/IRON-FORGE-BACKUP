@@ -1,84 +1,128 @@
-const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const { AppError } = require('./error.middleware');
 const User = require('../models/user.model');
 
 /**
- * Protect routes - only allow authenticated users
+ * Middleware to protect routes - verify JWT token
  */
-exports.protect = async (req, res, next) => {
+const protect = async (req, res, next) => {
   try {
     let token;
     
-    // 1) Get token from Authorization header or cookies
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-    ) {
-      // Extract token from Bearer token format
+    // Get token from header or cookie
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies.jwt) {
-      // Get token from cookies if available
-      token = req.cookies.jwt;
+      console.log('Auth token found in Authorization header');
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+      console.log('Auth token found in cookies');
     }
     
+    // Check if token exists
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: 'You are not logged in. Please log in to get access.'
-      });
+      console.log('No auth token - redirecting to login page');
+      return res.redirect('/join');
     }
     
-    // 2) Verify the token
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    
-    // 3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      return res.status(401).json({
-        success: false,
-        message: 'The user belonging to this token no longer exists.'
-      });
+    // Verify token
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log('Token verified, user ID:', decoded.id);
+      
+      // Find user by id
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        console.log('User not found in database - clearing token and redirecting');
+        res.clearCookie('token');
+        return res.redirect('/join');
+      }
+      
+      console.log('User authenticated:', user.name);
+      
+      // Add user to request object
+      req.user = user;
+      next();
+    } catch (error) {
+      console.error('Token verification failed:', error.message);
+      res.clearCookie('token');
+      return res.redirect('/join');
     }
-    
-    // 4) Check if user changed password after the token was issued
-    // This functionality can be added if needed
-    
-    // Grant access to protected route
-    req.user = currentUser;
-    res.locals.user = currentUser;
-    next();
-  } catch (err) {
-    if (err.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token. Please log in again.'
-      });
-    }
-    
-    if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Your token has expired. Please log in again.'
-      });
-    }
-    
-    next(err);
+  } catch (error) {
+    console.error('Auth error:', error.message);
+    res.clearCookie('token');
+    return res.redirect('/join');
   }
 };
 
 /**
- * Restrict access to certain roles
+ * Middleware to check if user is authenticated and make user available to templates
+ * This doesn't block access, just adds user to res.locals if available
  */
-exports.restrictTo = (...roles) => {
+const checkAuth = async (req, res, next) => {
+  try {
+    let token;
+    
+    // Get token from header or cookie
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+      console.log('Token found in Authorization header');
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+      console.log('Token found in cookies');
+    }
+    
+    // If no token, just continue without setting user
+    if (!token) {
+      console.log('No authentication token found');
+      return next();
+    }
+    
+    try {
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log('Token verified, user ID:', decoded.id);
+      
+      // Find user by id
+      const user = await User.findById(decoded.id);
+      if (user) {
+        console.log('User found in database:', user.name);
+        // Add user to request object and res.locals for templates
+        req.user = user;
+        res.locals.user = user;
+      } else {
+        console.log('User not found in database - clearing token');
+        res.clearCookie('token');
+      }
+    } catch (err) {
+      // If token verification fails, clear the token
+      console.error('Token verification failed:', err.message);
+      res.clearCookie('token');
+    }
+    
+    next();
+  } catch (error) {
+    // If any error occurs, just continue without setting user
+    console.error('Error in checkAuth middleware:', error.message);
+    res.clearCookie('token');
+    next();
+  }
+};
+
+/**
+ * Middleware to restrict routes to specific roles
+ */
+const authorize = (...roles) => {
   return (req, res, next) => {
-    // Roles is an array ['admin', 'trainer']
+    if (!req.user) {
+      return next(new AppError('User not found', 404));
+    }
+    
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: 'You do not have permission to perform this action.'
-      });
+      return next(new AppError('Not authorized to access this route', 403));
     }
     
     next();
   };
-}; 
+};
+
+module.exports = { protect, authorize, checkAuth }; 

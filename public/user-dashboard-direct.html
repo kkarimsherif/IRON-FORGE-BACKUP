@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Dashboard Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #222;
+            color: white;
+            text-align: center;
+        }
+        h1 {
+            color: #ff6b00;
+        }
+        .btn-container {
+            margin: 30px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b00;
+            color: white;
+            padding: 15px 25px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #ff8c00;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .notes {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #999;
+            line-height: 1.6;
+        }
+        code {
+            background: #333;
+            padding: 3px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>IRON FORGE Direct Access</h1>
+    <p>This page provides direct access to dashboard pages, bypassing any JavaScript navigation issues.</p>
+    
+    <div class="btn-container">
+        <a href="/user-dashboard" class="btn" id="dashboard-link">Go to Dashboard</a>
+        <a href="/user-profile" class="btn" id="profile-link">Go to Profile</a>
+        <a href="/" class="btn" id="home-link">Go to Homepage</a>
+    </div>
+    
+    <div class="notes">
+        <p>If clicking directly on these buttons doesn't work, try:</p>
+        <ol style="text-align: left;">
+            <li>Right-click on a button and select "Open in new tab"</li>
+            <li>Manually type <code>http://localhost:5003/user-dashboard</code> in your browser address bar</li>
+            <li>Check browser console for any error messages</li>
+        </ol>
+    </div>
+
+    <script>
+        // Add click monitoring
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                console.log('Button clicked:', this.getAttribute('href'));
+                // Don't prevent default - we want normal navigation
+            });
+        });
+    </script>
+</body>
+</html> 

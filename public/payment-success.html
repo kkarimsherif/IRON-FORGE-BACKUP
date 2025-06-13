@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success - Iron Forge</title>
+    <link rel="stylesheet" href="gym.css">
+    <style>
+        .success-container {
+            max-width: 800px;
+            margin: 150px auto;
+            padding: 50px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .order-details {
+            margin-top: 30px;
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .order-detail {
+            margin-bottom: 10px;
+        }
+        
+        .back-btn {
+            background-color: #ff6b00;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background-color: #ff8c00;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="img/logo.png" alt="Iron Forge">
+                <h1>IRON <span>FORGE</span></h1>
+            </div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="gym.html">Home</a></li>
+                    <li><a href="gym.html#about">About</a></li>
+                    <li><a href="gym.html#services">Services</a></li>
+                    <li><a href="gym.html#classes">Classes</a></li>
+                    <li><a href="gym.html#pricing">Pricing</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="success-container">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Payment Successful!</h2>
+            <p>Thank you for your purchase. Your transaction has been completed successfully.</p>
+            
+            <div class="order-details">
+                <h3>Order Details:</h3>
+                <div id="order-info">
+                    <p class="order-detail" id="order-id">Order ID: Loading...</p>
+                    <p class="order-detail" id="order-date">Date: Loading...</p>
+                    <p class="order-detail" id="order-amount">Amount: Loading...</p>
+                </div>
+            </div>
+            
+            <a href="gym.html" class="back-btn">Return to Homepage</a>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the order ID from localStorage
+            const orderId = localStorage.getItem('lastOrderId');
+            
+            if (orderId) {
+                document.getElementById('order-id').textContent = `Order ID: ${orderId}`;
+                
+                // Get current date for the order
+                const now = new Date();
+                const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+                document.getElementById('order-date').textContent = `Date: ${dateStr}`;
+                
+                // Try to fetch order details from API
+                fetch(`/api/payments/status/${orderId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.order) {
+                            const amount = data.order.amount_cents / 100;
+                            document.getElementById('order-amount').textContent = `Amount: EGP ${amount.toFixed(2)}`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching order details:', error);
+                    });
+            } else {
+                document.getElementById('order-id').textContent = 'Order ID: Not available';
+                document.getElementById('order-date').textContent = `Date: ${new Date().toLocaleDateString()}`;
+                document.getElementById('order-amount').textContent = 'Amount: Not available';
+            }
+        });
+    </script>
+</body>
+</html> 

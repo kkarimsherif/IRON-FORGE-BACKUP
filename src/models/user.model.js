@@ -2,116 +2,138 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { ROLES } = require('../config/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please provide your name'],
-    trim: true
+    required: [true, 'Please provide a name'],
+    trim: true,
   },
   email: {
     type: String,
-    required: [true, 'Please provide your email'],
+    required: [true, 'Please provide an email'],
     unique: true,
     lowercase: true,
     trim: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address']
+    match: [
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+      'Please provide a valid email',
+    ],
   },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    minlength: [8, 'Password must be at least 8 characters long'],
-    select: false // Don't return password in queries by default
+    minlength: [6, 'Password must be at least 6 characters'],
+    select: false,
   },
   role: {
     type: String,
-    enum: ['user', 'trainer', 'admin'],
-    default: 'user'
+    enum: Object.values(ROLES),
+    default: ROLES.USER,
   },
   profilePicture: {
     type: String,
-    default: 'default-avatar.jpg'
+    default: '',
   },
-  phoneNumber: {
+  phone: {
     type: String,
-    trim: true
+    trim: true,
   },
-  dateOfBirth: {
-    type: Date
-  },
-  membershipType: {
+  address: {
     type: String,
-    enum: ['none', 'basic', 'premium', 'platinum'],
-    default: 'none'
+    trim: true,
   },
-  membershipStartDate: {
-    type: Date
+  city: {
+    type: String,
+    trim: true,
   },
-  membershipEndDate: {
-    type: Date
+  state: {
+    type: String,
+    trim: true,
   },
-  enrolledClasses: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Class'
-  }],
+  zipCode: {
+    type: String,
+    trim: true,
+  },
+  emergencyContact: {
+    type: String,
+    trim: true,
+  },
+  height: {
+    type: Number,
+  },
+  weight: {
+    type: Number,
+  },
+  fitnessGoal: {
+    type: String,
+    enum: ['weight-loss', 'muscle-gain', 'endurance', 'flexibility', 'general-fitness'],
+    default: 'general-fitness',
+  },
+  membership: {
+    type: {
+      type: String,
+      enum: ['basic', 'black'],
+      default: 'basic',
+    },
+    startDate: {
+      type: Date,
+      default: Date.now,
+    },
+    renewalDate: {
+      type: Date,
+      default: () => {
+        const date = new Date();
+        date.setMonth(date.getMonth() + 1);
+        return date;
+      },
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  bmi: {
+    value: String,
+    category: String,
+    date: Date,
+  },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  active: {
-    type: Boolean,
-    default: true,
-    select: false
-  },
+  passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetExpires: Date
-}, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  passwordResetExpires: Date,
 });
 
-// Virtual property for user age
-userSchema.virtual('age').get(function() {
-  if (!this.dateOfBirth) return null;
-  const today = new Date();
-  const birthDate = new Date(this.dateOfBirth);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-});
-
-// Virtual property to check if membership is active
-userSchema.virtual('membershipActive').get(function() {
-  if (!this.membershipEndDate) return false;
-  return new Date() <= new Date(this.membershipEndDate);
-});
-
-// Middleware to hash password before saving
-userSchema.pre('save', async function(next) {
-  // Only hash the password if it has been modified
+// Hash password before saving
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   
-  // Hash the password with a salt of 12
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
+// Update passwordChangedAt when password is changed
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  
+  this.passwordChangedAt = Date.now() - 1000; // -1s to ensure token is created after password change
+  next();
+});
+
 // Method to check if password is correct
-userSchema.methods.isPasswordCorrect = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Method to generate a JWT token
-userSchema.methods.generateAuthToken = function() {
-  return jwt.sign(
-    { id: this._id, role: this.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN }
-  );
+// Method to generate JWT token
+userSchema.methods.generateAuthToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '30d',
+  });
 };
 
 // Method to generate password reset token
@@ -129,6 +151,4 @@ userSchema.methods.createPasswordResetToken = function() {
   return resetToken;
 };
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User; 
+module.exports = mongoose.model('User', userSchema); 

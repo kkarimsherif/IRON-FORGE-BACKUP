@@ -1,0 +1,106 @@
+<header class="header">
+    <div class="container">
+        <div class="logo-container">
+            <img src="/img/logo-transparent.png" alt="IRON-FORGE Logo" class="logo">
+            <div class="logo-text">
+                <span class="logo-name">IRON-FORGE</span>
+                <span class="logo-slogan">Forge Your Strength, Shape Your Future</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button id="nightModeToggle" class="action-btn">
+                <i class="fas fa-moon"></i>
+            </button>
+            <a href="/cart" class="action-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+        
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="/#memberships">Memberships</a></li>
+                <li><a href="/#services">Services</a></li>
+                <li><a href="/#classes">Classes</a></li>
+                <li><a href="/#products">Products</a></li>
+                <li><a href="/#contact">Contact</a></li>
+                <% if (locals.user) { %>
+                    <li class="dropdown">
+                        <a href="#" class="btn-profile dropdown-toggle">
+                            <i class="fas fa-user-circle"></i> 
+                            <span class="profile-text"><%= locals.user.name.split(' ')[0] || 'Profile' %></span>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                          
+                            <a href="/user-dashboard" id="profile-link" onclick="window.location.href='/user-dashboard'; return false;"><i class="fas fa-user"></i> My Profile</a>
+
+                            <div class="dropdown-divider"></div>
+                            <form action="/auth/logout" method="POST" style="margin: 0;">
+                                <button type="submit" class="dropdown-btn">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                <% } else { %>
+                    <li><a href="/join" class="btn-join" id="btn-join">JOIN NOW</a></li>
+                <% } %>
+            </ul>
+        </nav>
+        
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</header>
+
+<script>
+    window.onload = function() {
+        // Debug logging
+        console.log('Navbar script loaded');
+        
+        // Add direct click handler to profile link
+        const profileLink = document.getElementById('profile-link');
+        if (profileLink) {
+            console.log('Found profile link:', profileLink.href);
+            profileLink.addEventListener('click', function(e) {
+                console.log('Profile link clicked via event listener');
+                // Force navigation to user dashboard
+                window.location.href = '/user-dashboard';
+                return false;
+            });
+        }
+    
+        // Toggle dropdown menu
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parent = this.parentElement;
+                parent.classList.toggle('active');
+                
+                // Close other dropdowns
+                document.querySelectorAll('.dropdown.active').forEach(dropdown => {
+                    if (dropdown !== parent) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown.active').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        });
+    };
+</script>
+<script src="/dashboard-link-fix.js"></script> 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Navigation Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff6b00;
+        }
+        .link-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b00;
+            color: white;
+            padding: 10px 15px;
+            margin: 5px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .notes {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Navigation Links</h1>
+    
+    <div class="link-group">
+        <h2>Profile Navigation</h2>
+        <a href="/user-dashboard" class="btn">Go to User Dashboard</a>
+        <a href="/user-profile" class="btn">Go to User Profile</a>
+    </div>
+    
+    <div class="link-group">
+        <h2>Other Pages</h2>
+        <a href="/" class="btn">Home</a>
+        <a href="/join" class="btn">Join/Login</a>
+    </div>
+    
+    <div class="notes">
+        <p>This is a test page to check if direct navigation links are working properly.</p>
+        <p>If these links work but the dropdown menu doesn't, there might be a JavaScript issue preventing navigation.</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click tracking to all links
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log('Link clicked:', this.getAttribute('href'));
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

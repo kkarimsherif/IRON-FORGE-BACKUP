@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="gym.css">
+    <link rel="stylesheet" href="light-mode-fix.css">
+    <link rel="stylesheet" href="dropdown-fix.css">
+    <link rel="stylesheet" href="dropdown-force.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load Three.js and necessary loaders -->
+    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js"></script>
+    <!-- Load particle system library -->
+    <script src="https://cdn.jsdelivr.net/npm/three-particles@0.3.0/dist/three-particles.min.js"></script>
+    <!-- Preload the dumbbell model -->
+    <link rel="preload" href="dumbbell-animation/dumbbells.glb" as="fetch" crossorigin>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor-container">
+        <div class="cursor"></div>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <%- include('partials/navbar') %>
+    
+    <!-- Dumbbell Animation Section -->
+    <section id="dumbbell-animation" class="section dumbbell-animation">
+        <div class="animation-container">
+            <div id="canvas-container" class="canvas-container">
+                <!-- 3D Canvas will be rendered here -->
+            </div>
+            <div class="animation-intro">
+                <h2 class="forge-text">
+                    FORGE YOUR <span>STRENGTH</span>
+                    <div class="model-container" id="forgeModelContainer"></div>
+                </h2>
+                <p>Experience the power of IRON-FORGE</p>
+            </div>
+        </div>
+    </section>
+    
+    <!--hero section-->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>NO <span>JUDGMENTS</span> HERE</h1>
+                <p>Premium fitness experience at a price everyone can afford</p>
+                <div class="hero-buttons">
+                    <a href="#memberships" class="btn-primary">View Memberships</a>
+                    <a href="/join" class="btn-secondary">Join Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Section -->
+    <section id="memberships" class="section memberships">
+        <div class="container">
+            <div class="section-header">
+                <h2><span>Membership Plans</span></h2>
+                <p>Find the perfect plan for your fitness journey</p>
+            </div>
+            <div class="membership-cards">
+                <div class="membership-card">
+                    <div class="membership-header">
+                        <h3>BASIC</h3>
+                        <div class="price">$10<span>/month</span></div>
+                    </div>
+                    <div class="membership-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Access to Home Gym</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Free Fitness Training</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Free WiFi</p>
+                        </div>
+                        <div class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <p>Bring a Guest</p>
+                        </div>
+                        <div class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <p>Use of Massage Chairs</p>
+                        </div>
+                    </div>
+                    <a href="/join" class="btn-join">Join Now</a>
+                </div>
+                
+                <div class="membership-card featured">
+                    <div class="featured-badge">POPULAR</div>
+                    <div class="membership-header">
+                        <h3>BLACK CARD®</h3>
+                        <div class="price">$24<span>/month</span></div>
+                    </div>
+                    <div class="membership-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Access to All Gym Locations</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Bring a Guest Anytime</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Use of Massage Chairs</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>Use of Hydromassage</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <p>50% Off Drinks</p>
+                        </div>
+                    </div>
+                    <a href="/join" class="btn-join">Join Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <div class="iron-forge-title">
+                <h2><span>IRON-FORGE</span></h2>
+                <h3>ABOUT IRON-FORGE</h3>
+            </div>
+            
+            <div class="about-iron-forge">
+                <div class="about-philosophy">
+                    <p>At IRON-FORGE, we believe fitness is more than just physical transformation. It's about forging mental resilience, building discipline, and shaping your best self.</p>
+                    <p>Founded in 2015, we've helped thousands of members achieve their fitness goals through our unique approach combining strength training, nutrition, and community support.</p>
+                    <span class="tagline">Where strength meets purpose</span>
+                </div>
+                
+                <div class="about-icons">
+                    <div class="about-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="about-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="about-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our Philosophy</h3>
+                    <p>At IRON-FORGE, we believe fitness is more than just physical transformation. It's about forging mental resilience, building discipline, and shaping your best self.</p>
+                    <p>Founded in 2015, we've helped thousands of members achieve their fitness goals through our unique approach combining strength training, nutrition, and community support.</p>
+                    <div class="about-badges">
+                        <div class="badge">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Judgment Free Zone</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-users"></i>
+                            <span>Community First</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Affordable Fitness</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="img/background.jpg" alt="IRON-FORGE Gym Interior">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BMI Calculator Section -->
+    <section id="bmi-calculator" class="section bmi-calculator">
+        <div class="container">
+            <div class="section-header">
+                <h2><span>BMI Calculator</span></h2>
+                <p>Check your Body Mass Index (BMI) to track your fitness progress</p>
+            </div>
+            <div class="bmi-form">
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" placeholder="Enter your height in cm" required>
+                
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" placeholder="Enter your weight in kg" required>
+                
+                <button onclick="calculateBMI()" class="btn-primary">Calculate BMI</button>
+                
+                <div id="bmi-result"></div>
+            </div>
+            <button class="btn-secondary switch-button" onclick="switchUnits()">Switch to Feet & Pounds</button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section services">
+        <div class="container">
+            <div class="services-title">
+                <h2><span>OUR SERVICES</span></h2>
+                <p class="services-subtitle">Comprehensive fitness solutions</p>
+            </div>
+            
+            <div class="services-grid">
+                <% services.forEach(service => { %>
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="<%= service.icon %>"></i>
+                        </div>
+                        <h3><%= service.title %></h3>
+                        <p><%= service.description %></p>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes" class="section classes">
+        <div class="container">
+            <div class="classes-title">
+                <h2><span>Classes</span></h2>
+                <p class="classes-subtitle">Find your perfect workout</p>
+            </div>
+            <div class="classes-filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="strength">Strength</button>
+                <button class="filter-btn" data-filter="cardio">Cardio</button>
+                <button class="filter-btn" data-filter="hiit">HIIT</button>
+                <button class="filter-btn" data-filter="recovery">Recovery</button>
+            </div>
+            <div class="classes-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- App Promo Section -->
+    <section id="app-promo" class="section app-promo">
+        <div class="container">
+            <div class="app-promo-content">
+                <div class="app-promo-title">
+                    <h2><span>Take IRON-FORGE With You</span></h2>
+                    <p>Download our app to manage your membership, book classes, and track your progress on the go.</p>
+                    <div class="app-buttons">
+                        <a href="https://www.apple.com/app-store/" class="app-button" target="_blank">
+                            <i class="fab fa-apple"></i>
+                            <span>App Store</span>
+                        </a>
+                        <a href="https://play.google.com/store/games?hl=en&pli=1" class="app-button" target="_blank">
+                            <i class="fab fa-google-play"></i>
+                            <span>Google Play</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="app-promo-image">
+                    <img src="img/background.jpg" alt="IRON-FORGE App Screenshot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="section products">
+        <div class="container">
+            <div class="products-title">
+                <h2><span>PREMIUM PRODUCTS</span></h2>
+                <p class="products-subtitle">Enhance your fitness journey</p>
+            </div>
+            
+            <div class="products-grid">
+                <% products.forEach(product => { %>
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <img src="<%= product.image %>" alt="<%= product.title %>" class="product-img">
+                        </div>
+                        <h3><%= product.title %></h3>
+                        <p class="product-price">$<%= product.price.toFixed(2) %></p>
+                        <button class="btn-add-to-cart">ADD TO CART</button>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section testimonials">
+        <div class="container">
+            <div class="testimonials-title">
+                <h2><span>Members Stories</span></h2>
+                <p class="testimonials-subtitle">Real results from real people</p>
+            </div>
+            <div class="testimonials-grid">
+                <% testimonials.forEach(testimonial => { %>
+                    <div class="testimonial-card">
+                        <div class="testimonial-image">
+                            <img src="<%= testimonial.image %>" alt="Testimonial">
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="testimonial-stars">
+                                <% for(let i=0; i<testimonial.stars; i++) { %>
+                                    <i class="fas fa-star"></i>
+                                <% } %>
+                            </div>
+                            <p>"<%= testimonial.text %>"</p>
+                            <h4><%= testimonial.name %></h4>
+                            <span><%= testimonial.memberSince %></span>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <div class="contact-title">
+                <h2><span>Contact Us</span></h2>
+                <p class="contact-subtitle">We'd love to hear from you</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p><%= contactInfo.address %></p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <p><%= contactInfo.phone %></p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p><%= contactInfo.email %></p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <p><%= contactInfo.hours %></p>
+                    </div>
+                </div>
+                <form class="contact-form" action="/contact" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <%- include('partials/payment-modal') %>
+    </section>
+
+    <!-- Success Modal -->
+    <%- include('partials/success-modal') %>
+
+    <!-- Cart Modal -->
+    <%- include('partials/cart-modal') %>
+    
+    <!-- Footer Section -->
+    <%- include('partials/footer') %>
+
+    <script src="gym.js"></script>
+    <script src="smooth-scroll.js"></script>
+    <script src="dropdown.js"></script>
+    <script src="dropdown-debug.js"></script>
+    <script src="link-debug.js"></script>
+</body>
+</html> 

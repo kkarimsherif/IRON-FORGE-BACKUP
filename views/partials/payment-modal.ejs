@@ -1,0 +1,54 @@
+<div class="payment-modal" id="paymentModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2><span>Complete Your Membership</span></h2>
+        <form id="paymentForm" action="/process-payment" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="John Smith">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="johnsmith@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="membership">Membership Plan</label>
+                <select id="membership" name="membership" required>
+                    <option value="">Select a plan</option>
+                    <option value="basic">Basic ($10/month)</option>
+                    <option value="black">Black Card® ($24/month)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <input type="radio" id="creditCard" name="payment" value="credit" checked>
+                        <label for="creditCard"><i class="far fa-credit-card"></i> Credit Card</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="radio" id="paypal" name="payment" value="paypal">
+                        <label for="paypal"><i class="fab fa-paypal"></i> PayPal</label>
+                    </div>
+                </div>
+            </div>
+            <div class="credit-card-info" id="creditCardInfo">
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" name="expiry" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="123">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Complete Registration</button>
+        </form>
+    </div>
+</div> 

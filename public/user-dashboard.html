@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/logo-transparent.png" type="image/png">
+    <title>IRON-FORGE | User Dashboard</title>
+    <link rel="stylesheet" href="user-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="api-client.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>IRON-FORGE</h2>
+                <p>Member Dashboard</p>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img id="user-avatar" src="img/default-avatar.png" alt="User Avatar">
+                </div>
+                <h3 id="user-name">Loading...</h3>
+                <p id="membership-badge" class="membership-badge">Basic</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" data-section="overview">
+                        <a href="#overview"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    </li>
+                    <li data-section="profile">
+                        <a href="#profile"><i class="fas fa-user"></i> My Profile</a>
+                    </li>
+                    <li data-section="membership">
+                        <a href="#membership"><i class="fas fa-id-card"></i> Membership</a>
+                    </li>
+                    <li data-section="classes">
+                        <a href="#classes"><i class="fas fa-calendar-alt"></i> My Classes</a>
+                    </li>
+                    <li data-section="orders">
+                        <a href="#orders"><i class="fas fa-shopping-bag"></i> Order History</a>
+                    </li>
+                    <li data-section="notifications">
+                        <a href="#notifications"><i class="fas fa-bell"></i> Notifications</a>
+                    </li>
+                    <li class="logout">
+                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="gym.html" class="back-to-site">
+                    <i class="fas fa-arrow-left"></i> Back to Website
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-search">
+                    <input type="text" placeholder="Search...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">0</span>
+                    </div>
+                    <button id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <h1>Dashboard Overview</h1>
+                
+                <div class="overview-cards">
+                    <div class="overview-card">
+                        <div class="card-icon membership-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Membership</h3>
+                            <p id="membership-status">Basic</p>
+                            <p id="membership-expiry">Valid until: 12/31/2023</p>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon classes-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Upcoming Classes</h3>
+                            <p id="upcoming-classes-count">0 classes scheduled</p>
+                            <a href="#classes" class="card-link">View Schedule</a>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon orders-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Recent Orders</h3>
+                            <p id="recent-orders-count">0 recent orders</p>
+                            <a href="#orders" class="card-link">View Orders</a>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-card">
+                        <div class="card-icon fitness-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <div class="card-info">
+                            <h3>Fitness Stats</h3>
+                            <p>Track your progress</p>
+                            <a href="#profile" class="card-link">Update Stats</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-widgets">
+                    <div class="widget activity-feed">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-list" id="activity-list">
+                            <div class="activity-item loading-placeholder">
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="widget upcoming-classes">
+                        <h2>Upcoming Classes</h2>
+                        <div id="class-list">
+                            <div class="class-item loading-placeholder">
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                            </div>
+                        </div>
+                        <a href="#classes" class="view-all-btn">View All Classes</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="dashboard-section">
+                <h1>My Profile</h1>
+                
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img id="profile-image" src="img/default-avatar.png" alt="Profile Picture">
+                            <button class="change-avatar-btn"><i class="fas fa-camera"></i></button>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profile-name">Loading...</h2>
+                            <p id="profile-email">loading@example.com</p>
+                            <p id="profile-member-since">Member since: ...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-tabs">
+                        <button class="tab-btn active" data-tab="personal-info">Personal Information</button>
+                        <button class="tab-btn" data-tab="fitness-stats">Fitness Stats</button>
+                        <button class="tab-btn" data-tab="security">Security</button>
+                    </div>
+                    
+                    <div class="profile-tab-content">
+                        <!-- Personal Information Tab -->
+                        <div class="tab-pane active" id="personal-info">
+                            <form id="personal-info-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="full-name">Full Name</label>
+                                        <input type="text" id="full-name" name="fullName" placeholder="Your full name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone" name="phone" placeholder="Your phone number">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" id="address" name="address" placeholder="Your street address">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" name="city" placeholder="City">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" id="state" name="state" placeholder="State/Province">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="zip">Zip Code</label>
+                                        <input type="text" id="zip" name="zip" placeholder="Zip/Postal code">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="emergency-contact">Emergency Contact</label>
+                                    <input type="text" id="emergency-contact" name="emergencyContact" placeholder="Name and phone number">
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn primary-btn">
+                                        <span class="btn-text">Save Changes</span>
+                                        <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Fitness Stats Tab -->
+                        <div class="tab-pane" id="fitness-stats">
+                            <form id="fitness-stats-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="weight">Weight (kg)</label>
+                                        <input type="number" id="weight" name="weight" placeholder="Your current weight">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="height">Height (cm)</label>
+                                        <input type="number" id="height" name="height" placeholder="Your height">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fitness-goal">Fitness Goal</label>
+                                    <select id="fitness-goal" name="fitnessGoal">
+                                        <option value="weight-loss">Weight Loss</option>
+                                        <option value="muscle-gain">Muscle Gain</option>
+                                        <option value="endurance">Endurance</option>
+                                        <option value="general-fitness">General Fitness</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="activity-level">Activity Level</label>
+                                    <select id="activity-level" name="activityLevel">
+                                        <option value="sedentary">Sedentary</option>
+                                        <option value="lightly-active">Lightly Active</option>
+                                        <option value="moderately-active">Moderately Active</option>
+                                        <option value="very-active">Very Active</option>
+                                        <option value="super-active">Super Active</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="bmi-calculator">
+                                    <h3>BMI Calculator</h3>
+                                    <div class="bmi-result" id="bmi-result">
+                                        <div class="bmi-value">--</div>
+                                        <div class="bmi-category">Enter height and weight</div>
+                                    </div>
+                                    <button type="button" class="btn secondary-btn" id="calculate-bmi">Calculate BMI</button>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn primary-btn">
+                                        <span class="btn-text">Save Changes</span>
+                                        <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Security Tab -->
+                        <div class="tab-pane" id="security">
+                            <form id="security-form">
+                                <div class="form-group">
+                                    <label for="current-password">Current Password</label>
+                                    <input type="password" id="current-password" name="currentPassword" placeholder="Enter your current password">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-password">New Password</label>
+                                    <input type="password" id="new-password" name="newPassword" placeholder="Enter new password">
+                                    <div class="password-strength" id="password-strength">
+                                        <div class="strength-bar"></div>
+                                        <span class="strength-text">Password strength</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirm New Password</label>
+                                    <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm new password">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="two-factor" name="twoFactor">
+                                        <span>Enable Two-Factor Authentication</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn primary-btn">
+                                        <span class="btn-text">Update Password</span>
+                                        <span class="spinner"><i class="fas fa-spinner fa-spin"></i></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Membership Section -->
+            <section id="membership" class="dashboard-section">
+                <h1>My Membership</h1>
+                
+                <div class="membership-details">
+                    <div class="current-membership">
+                        <h2>Current Plan</h2>
+                        
+                        <div class="plan-card" id="current-plan-card">
+                            <div class="plan-header">
+                                <h3 id="plan-name">Basic</h3>
+                                <div class="plan-price" id="plan-price">$10<span>/month</span></div>
+                            </div>
+                            <div class="plan-details">
+                                <p><strong>Status:</strong> <span id="plan-status">Active</span></p>
+                                <p><strong>Start Date:</strong> <span id="plan-start-date">01/01/2023</span></p>
+                                <p><strong>Next Billing:</strong> <span id="plan-next-billing">01/01/2024</span></p>
+                            </div>
+                            <div class="plan-actions">
+                                <button class="btn primary-btn" id="upgrade-btn">Upgrade Plan</button>
+                                <button class="btn secondary-btn" id="cancel-btn">Cancel Membership</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="membership-benefits">
+                        <h2>Your Benefits</h2>
+                        <ul class="benefits-list" id="benefits-list">
+                            <li><i class="fas fa-check"></i> Unlimited Access to Home Club</li>
+                            <li><i class="fas fa-check"></i> Free WiFi Access</li>
+                            <li><i class="fas fa-check"></i> Free Fitness Training</li>
+                            <li class="inactive"><i class="fas fa-times"></i> Fitness Training Plan</li>
+                            <li class="inactive"><i class="fas fa-times"></i> Unlimited Invitations</li>
+                            <li class="inactive"><i class="fas fa-times"></i> Hydromassage</li>
+                            <li class="inactive"><i class="fas fa-times"></i> Tanning</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="upgrade-options">
+                    <h2>Available Plans</h2>
+                    
+                    <div class="plans-container">
+                        <div class="plan-option">
+                            <div class="plan-header">
+                                <h3>Basic</h3>
+                                <div class="plan-price">$10<span>/month</span></div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> Unlimited Access to Home Club</li>
+                                <li><i class="fas fa-check"></i> Free WiFi Access</li>
+                                <li><i class="fas fa-check"></i> Free Fitness Training</li>
+                                <li class="inactive"><i class="fas fa-times"></i> Fitness Training Plan</li>
+                                <li class="inactive"><i class="fas fa-times"></i> Unlimited Invitations</li>
+                                <li class="inactive"><i class="fas fa-times"></i> Hydromassage</li>
+                                <li class="inactive"><i class="fas fa-times"></i> Tanning</li>
+                            </ul>
+                            <button class="btn select-plan-btn" data-plan="basic">Select</button>
+                        </div>
+                        
+                        <div class="plan-option featured">
+                            <div class="plan-header">
+                                <div class="featured-label">Most Popular</div>
+                                <h3>Black Card®</h3>
+                                <div class="plan-price">$24<span>/month</span></div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> Full Access to Any IRON-FORGE Branch</li>
+                                <li><i class="fas fa-check"></i> Free WiFi Access</li>
+                                <li><i class="fas fa-check"></i> Free Fitness Training</li>
+                                <li><i class="fas fa-check"></i> Fitness Training Plan</li>
+                                <li><i class="fas fa-check"></i> Unlimited Invitations</li>
+                                <li><i class="fas fa-check"></i> Hydromassage</li>
+                                <li><i class="fas fa-check"></i> Tanning & Red Light Therapy</li>
+                            </ul>
+                            <button class="btn select-plan-btn" data-plan="black-card">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Classes Section -->
+            <section id="classes" class="dashboard-section">
+                <h1>My Classes</h1>
+                
+                <div class="classes-tabs">
+                    <button class="tab-btn active" data-tab="registered-classes">Registered Classes</button>
+                    <button class="tab-btn" data-tab="available-classes">Available Classes</button>
+                    <button class="tab-btn" data-tab="past-classes">Past Classes</button>
+                </div>
+                
+                <div class="classes-tab-content">
+                    <!-- Registered Classes Tab -->
+                    <div class="tab-pane active" id="registered-classes">
+                        <div class="class-search">
+                            <input type="text" placeholder="Search classes...">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                        
+                        <div class="classes-list" id="registered-classes-list">
+                            <div class="no-classes-message">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>You are not registered for any classes.</p>
+                                <button class="btn primary-btn" id="browse-classes-btn">Browse Classes</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Available Classes Tab -->
+                    <div class="tab-pane" id="available-classes">
+                        <div class="class-filters">
+                            <div class="filter-group">
+                                <label for="class-type">Class Type</label>
+                                <select id="class-type">
+                                    <option value="">All Types</option>
+                                    <option value="yoga">Yoga</option>
+                                    <option value="hiit">HIIT</option>
+                                    <option value="cycling">Cycling</option>
+                                    <option value="strength">Strength</option>
+                                    <option value="zumba">Zumba</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="instructor">Instructor</label>
+                                <select id="instructor">
+                                    <option value="">All Instructors</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="date-filter">Date</label>
+                                <input type="date" id="date-filter">
+                            </div>
+                            
+                            <button class="btn secondary-btn" id="reset-filters">Reset</button>
+                        </div>
+                        
+                        <div class="classes-calendar" id="classes-calendar">
+                            <div class="calendar-header">
+                                <button id="prev-week"><i class="fas fa-chevron-left"></i></button>
+                                <h3 id="calendar-title">August 1-7, 2023</h3>
+                                <button id="next-week"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                            
+                            <div class="calendar-grid" id="calendar-grid">
+                                <!-- Calendar content will be generated with JavaScript -->
+                                <div class="loading-placeholder">
+                                    <div class="placeholder-line"></div>
+                                    <div class="placeholder-line"></div>
+                                    <div class="placeholder-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Past Classes Tab -->
+                    <div class="tab-pane" id="past-classes">
+                        <div class="past-classes-list" id="past-classes-list">
+                            <div class="loading-placeholder">
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="dashboard-section">
+                <h1>Order History</h1>
+                
+                <div class="orders-container">
+                    <div class="orders-filters">
+                        <div class="filter-group">
+                            <label for="order-status">Status</label>
+                            <select id="order-status">
+                                <option value="">All Orders</option>
+                                <option value="completed">Completed</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="date-range">
+                            <label>Date Range</label>
+                            <div class="date-inputs">
+                                <input type="date" id="date-from" placeholder="From">
+                                <input type="date" id="date-to" placeholder="To">
+                            </div>
+                        </div>
+                        
+                        <button class="btn secondary-btn" id="apply-filters">Apply Filters</button>
+                    </div>
+                    
+                    <div class="orders-list" id="orders-list">
+                        <div class="loading-placeholder">
+                            <div class="placeholder-line"></div>
+                            <div class="placeholder-line"></div>
+                            <div class="placeholder-line"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination" id="orders-pagination">
+                        <!-- Pagination will be generated with JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications" class="dashboard-section">
+                <h1>Notifications</h1>
+                
+                <div class="notifications-header">
+                    <div class="notification-actions">
+                        <button class="btn secondary-btn" id="mark-all-read">
+                            <i class="fas fa-check-double"></i> Mark All as Read
+                        </button>
+                        <button class="btn secondary-btn" id="notifications-settings">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                    </div>
+                    
+                    <div class="notification-tabs">
+                        <button class="tab-btn active" data-tab="all-notifications">All</button>
+                        <button class="tab-btn" data-tab="unread-notifications">Unread</button>
+                    </div>
+                </div>
+                
+                <div class="notifications-container">
+                    <div class="tab-pane active" id="all-notifications">
+                        <div class="notifications-list" id="all-notifications-list">
+                            <div class="loading-placeholder">
+                                <div class="placeholder-line"></div>
+                                <div class="placeholder-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="unread-notifications">
+                        <div class="notifications-list" id="unread-notifications-list">
+                            <!-- Will be populated with JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Class Registration Modal -->
+    <div id="class-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="class-details">
+                <!-- Will be populated with JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="order-details">
+                <!-- Will be populated with JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content small-modal">
+            <span class="close-modal">&times;</span>
+            <h2 id="confirm-title">Confirmation</h2>
+            <p id="confirm-message">Are you sure you want to proceed?</p>
+            <div class="modal-actions">
+                <button class="btn secondary-btn" id="confirm-cancel">Cancel</button>
+                <button class="btn primary-btn" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script src="user-dashboard.js"></script>
+</body>
+</html> 

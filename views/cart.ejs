@@ -1,0 +1,422 @@
+<%- include('./partials/header') %>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+          <h2 class="h4 mb-0">Your Shopping Cart</h2>
+        </div>
+        <div class="card-body">
+          <div id="cart-items-container">
+            <!-- Cart items will be loaded here dynamically -->
+            <div class="text-center py-5" id="cart-loading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Loading your cart...</p>
+            </div>
+            <div id="empty-cart-message" class="text-center py-5" style="display: none;">
+              <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+              <h3>Your cart is empty</h3>
+              <p class="text-muted">Looks like you haven't added any products to your cart yet.</p>
+              <a href="/products" class="btn btn-primary mt-3">Browse Products</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+          <h3 class="h5 mb-0">Order Summary</h3>
+        </div>
+        <div class="card-body">
+          <div id="cart-summary">
+            <!-- Summary will be loaded here dynamically -->
+            <div class="text-center py-3" id="summary-loading">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <div class="d-grid gap-2 mt-3">
+            <button id="checkout-btn" class="btn btn-primary" disabled>
+              Proceed to Checkout
+            </button>
+            <button id="clear-cart-btn" class="btn btn-outline-danger" disabled>
+              Clear Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h3 class="h6 mb-0">Have a Promo Code?</h3>
+        </div>
+        <div class="card-body">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Enter code" id="promo-code">
+            <button class="btn btn-outline-secondary" type="button" id="apply-promo">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Item Template -->
+<template id="cart-item-template">
+  <div class="cart-item border-bottom py-3">
+    <div class="row align-items-center">
+      <div class="col-md-2 mb-2 mb-md-0">
+        <img src="" alt="Product Image" class="img-fluid rounded cart-item-image">
+      </div>
+      <div class="col-md-4 mb-2 mb-md-0">
+        <h5 class="cart-item-title"></h5>
+        <p class="text-muted cart-item-category"></p>
+      </div>
+      <div class="col-md-2 mb-2 mb-md-0">
+        <div class="input-group input-group-sm">
+          <button class="btn btn-outline-secondary decrease-quantity" type="button">-</button>
+          <input type="number" class="form-control text-center item-quantity" value="1" min="1">
+          <button class="btn btn-outline-secondary increase-quantity" type="button">+</button>
+        </div>
+      </div>
+      <div class="col-md-2 mb-2 mb-md-0 text-md-end">
+        <span class="cart-item-price fw-bold"></span>
+      </div>
+      <div class="col-md-2 text-md-end">
+        <button class="btn btn-sm btn-outline-danger remove-item">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Order Summary Template -->
+<template id="summary-template">
+  <div class="summary-content">
+    <div class="d-flex justify-content-between mb-2">
+      <span>Subtotal</span>
+      <span class="summary-subtotal fw-bold"></span>
+    </div>
+    <div class="d-flex justify-content-between mb-2 summary-discount-row" style="display: none !important;">
+      <span>Discount</span>
+      <span class="summary-discount text-success fw-bold"></span>
+    </div>
+    <div class="d-flex justify-content-between mb-2 summary-membership-row" style="display: none !important;">
+      <span>Membership Discount</span>
+      <span class="summary-membership text-success fw-bold"></span>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between mb-2">
+      <span class="h5">Total</span>
+      <span class="summary-total h5"></span>
+    </div>
+  </div>
+</template>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Fetch cart data
+    fetchCart();
+    
+    // Event listeners
+    document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+    document.getElementById('checkout-btn').addEventListener('click', proceedToCheckout);
+    document.getElementById('apply-promo').addEventListener('click', applyPromoCode);
+    
+    // Event delegation for cart item actions
+    document.getElementById('cart-items-container').addEventListener('click', function(e) {
+      if (e.target.classList.contains('increase-quantity') || e.target.closest('.increase-quantity')) {
+        const item = e.target.closest('.cart-item');
+        const input = item.querySelector('.item-quantity');
+        const productId = item.dataset.productId;
+        const newQuantity = parseInt(input.value) + 1;
+        updateCartItem(productId, newQuantity);
+      }
+      
+      if (e.target.classList.contains('decrease-quantity') || e.target.closest('.decrease-quantity')) {
+        const item = e.target.closest('.cart-item');
+        const input = item.querySelector('.item-quantity');
+        const productId = item.dataset.productId;
+        const newQuantity = Math.max(1, parseInt(input.value) - 1);
+        updateCartItem(productId, newQuantity);
+      }
+      
+      if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+        const item = e.target.closest('.cart-item');
+        const productId = item.dataset.productId;
+        removeCartItem(productId);
+      }
+    });
+    
+    // Handle quantity input changes
+    document.getElementById('cart-items-container').addEventListener('change', function(e) {
+      if (e.target.classList.contains('item-quantity')) {
+        const item = e.target.closest('.cart-item');
+        const productId = item.dataset.productId;
+        const newQuantity = parseInt(e.target.value);
+        if (newQuantity > 0) {
+          updateCartItem(productId, newQuantity);
+        } else {
+          e.target.value = 1;
+          updateCartItem(productId, 1);
+        }
+      }
+    });
+  });
+  
+  // Fetch cart data from API
+  async function fetchCart() {
+    try {
+      const response = await fetch('/api/cart', {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart');
+      }
+      
+      const data = await response.json();
+      renderCart(data.data);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      showErrorMessage('Could not load your cart. Please try again later.');
+    }
+  }
+  
+  // Render cart data
+  function renderCart(data) {
+    const { cart, totals } = data;
+    const container = document.getElementById('cart-items-container');
+    const loadingEl = document.getElementById('cart-loading');
+    const emptyCartEl = document.getElementById('empty-cart-message');
+    
+    // Hide loading indicator
+    loadingEl.style.display = 'none';
+    
+    // Check if cart is empty
+    if (!cart.items || cart.items.length === 0) {
+      emptyCartEl.style.display = 'block';
+      document.getElementById('checkout-btn').disabled = true;
+      document.getElementById('clear-cart-btn').disabled = true;
+      renderSummary(totals);
+      return;
+    }
+    
+    // Clear container
+    container.innerHTML = '';
+    
+    // Render each cart item
+    cart.items.forEach(item => {
+      const template = document.getElementById('cart-item-template');
+      const clone = document.importNode(template.content, true);
+      
+      const itemEl = clone.querySelector('.cart-item');
+      itemEl.dataset.productId = item.product._id;
+      
+      const imageEl = clone.querySelector('.cart-item-image');
+      imageEl.src = item.product.image || '/img/product-placeholder.jpg';
+      imageEl.alt = item.product.title;
+      
+      clone.querySelector('.cart-item-title').textContent = item.product.title;
+      clone.querySelector('.cart-item-category').textContent = item.product.category;
+      clone.querySelector('.item-quantity').value = item.quantity;
+      clone.querySelector('.cart-item-price').textContent = `$${(item.product.price * item.quantity).toFixed(2)}`;
+      
+      container.appendChild(clone);
+    });
+    
+    // Enable buttons
+    document.getElementById('checkout-btn').disabled = false;
+    document.getElementById('clear-cart-btn').disabled = false;
+    
+    // Render summary
+    renderSummary(totals);
+  }
+  
+  // Render order summary
+  function renderSummary(totals) {
+    const summaryContainer = document.getElementById('cart-summary');
+    const loadingEl = document.getElementById('summary-loading');
+    
+    // Hide loading indicator
+    loadingEl.style.display = 'none';
+    
+    // Get template
+    const template = document.getElementById('summary-template');
+    const clone = document.importNode(template.content, true);
+    
+    // Fill in values
+    clone.querySelector('.summary-subtotal').textContent = `$${totals.subtotal.toFixed(2)}`;
+    
+    // Show discount row if there are discounts
+    if (totals.discounts > 0) {
+      const discountRow = clone.querySelector('.summary-discount-row');
+      discountRow.style.display = 'flex !important';
+      clone.querySelector('.summary-discount').textContent = `-$${totals.discounts.toFixed(2)}`;
+    }
+    
+    // Show membership discount row if there are membership discounts
+    if (totals.membershipDiscount > 0) {
+      const membershipRow = clone.querySelector('.summary-membership-row');
+      membershipRow.style.display = 'flex !important';
+      clone.querySelector('.summary-membership').textContent = `-$${totals.membershipDiscount.toFixed(2)}`;
+    }
+    
+    clone.querySelector('.summary-total').textContent = `$${totals.total.toFixed(2)}`;
+    
+    // Append to container
+    summaryContainer.innerHTML = '';
+    summaryContainer.appendChild(clone);
+  }
+  
+  // Update cart item quantity
+  async function updateCartItem(productId, quantity) {
+    try {
+      const response = await fetch(`/api/cart/items/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update cart');
+      }
+      
+      const data = await response.json();
+      renderCart(data.data);
+      
+      // Show success message
+      showToast('Cart updated successfully');
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      showErrorMessage('Could not update cart. Please try again.');
+    }
+  }
+  
+  // Remove item from cart
+  async function removeCartItem(productId) {
+    try {
+      const response = await fetch(`/api/cart/items/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to remove item from cart');
+      }
+      
+      const data = await response.json();
+      renderCart(data.data);
+      
+      // Show success message
+      showToast('Item removed from cart');
+    } catch (error) {
+      console.error('Error removing item:', error);
+      showErrorMessage('Could not remove item. Please try again.');
+    }
+  }
+  
+  // Clear entire cart
+  async function clearCart() {
+    if (!confirm('Are you sure you want to clear your cart?')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to clear cart');
+      }
+      
+      const data = await response.json();
+      renderCart(data.data);
+      
+      // Show success message
+      showToast('Cart cleared successfully');
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      showErrorMessage('Could not clear cart. Please try again.');
+    }
+  }
+  
+  // Proceed to checkout
+  function proceedToCheckout() {
+    window.location.href = '/checkout';
+  }
+  
+  // Apply promo code
+  function applyPromoCode() {
+    const promoCode = document.getElementById('promo-code').value.trim();
+    if (!promoCode) {
+      showErrorMessage('Please enter a promo code');
+      return;
+    }
+    
+    // This would normally call an API endpoint to validate and apply the promo code
+    // For now, just show a message
+    showToast('Promo code functionality coming soon!');
+  }
+  
+  // Show error message
+  function showErrorMessage(message) {
+    // You can implement a more sophisticated error display
+    alert(message);
+  }
+  
+  // Show toast notification
+  function showToast(message) {
+    // Check if Bootstrap toast is available
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      // Create toast element
+      const toastEl = document.createElement('div');
+      toastEl.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+      toastEl.setAttribute('role', 'alert');
+      toastEl.setAttribute('aria-live', 'assertive');
+      toastEl.setAttribute('aria-atomic', 'true');
+      
+      toastEl.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+      
+      document.body.appendChild(toastEl);
+      
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+      
+      // Remove from DOM after hiding
+      toastEl.addEventListener('hidden.bs.toast', function() {
+        document.body.removeChild(toastEl);
+      });
+    } else {
+      // Fallback
+      alert(message);
+    }
+  }
+</script>
+
+<%- include('./partials/footer') %> 
