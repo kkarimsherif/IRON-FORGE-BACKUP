@@ -408,6 +408,30 @@ body {
     opacity: 1;
 }
 
+.message {
+    display: none;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.back-to-login {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: var(--light);
+    opacity: 0.8;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.back-to-login:hover {
+    color: var(--primary);
+    opacity: 1;
+}
+
 .icons {
     cursor: pointer;
     transition: all 0.3s ease;

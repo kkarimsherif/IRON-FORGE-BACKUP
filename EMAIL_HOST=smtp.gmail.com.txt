@@ -1,0 +1,5 @@
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USERNAME=karimelhalawaty@gmail.com
+   EMAIL_PASSWORD=karim2005
+   EMAIL_FROM=your-karimelhalawaty@gmail.com

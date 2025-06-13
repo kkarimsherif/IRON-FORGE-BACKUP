@@ -4,7 +4,7 @@
  */
 
 // Base API URL - change this to match your server deployment
-const API_BASE_URL = 'http://localhost:3000/api'; // Updated to port 3000 to match our running server
+const API_BASE_URL = 'http://localhost:5003';
 
 // Authentication API
 const auth = {
@@ -66,7 +66,7 @@ const auth = {
   forgotPassword: async function(email) {
     try {
       console.log('API Client: Requesting password reset for', email);
-      const response = await fetch(`${API_BASE_URL}/auth/forgotPassword`, {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -83,6 +83,31 @@ const auth = {
       return data;
     } catch (error) {
       console.error('Forgot password error:', error);
+      throw error;
+    }
+  },
+  
+  // Reset password
+  resetPassword: async function(token, password) {
+    try {
+      console.log('API Client: Resetting password with token');
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Password reset failed');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Reset password error:', error);
       throw error;
     }
   },
