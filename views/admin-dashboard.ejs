@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/logo-transparent.png" type="image/png">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/api-client.js"></script>
+</head>
+<body>
+        <div class="admin-container">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <h2>Iron Forge</h2>
+                    <h3>Admin Panel</h3>
+                </div>
+                <nav class="nav-menu">
+                    <ul>
+                        <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="#products"><i class="fas fa-dumbbell"></i> Products</a></li>
+                        <li><a href="#orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                        <li><a href="#classes"><i class="fas fa-calendar-alt"></i> Classes</a></li>
+                        <li><a href="#users"><i class="fas fa-users"></i> Users</a></li>
+                        <li><a href="#subscriptions"><i class="fas fa-credit-card"></i> Subscriptions</a></li>
+                        <li><a href="#reports"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                        <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li class="logout"><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <header class="top-header">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="user-info">
+                        <div class="notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">3</span>
+                        </div>
+                        <div class="admin-profile">
+                            <img src="/img/admin-avatar.png" alt="Admin" onerror="this.src='https://via.placeholder.com/40'">
+                            <span><%= user.name %></span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Overview Section -->
+                <section id="dashboard" class="content-section active">
+                    <h1>Dashboard Overview</h1>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon product-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Products</h3>
+                                <p class="counter" id="total-products"><%= stats.totalProducts %></p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon order-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Orders</h3>
+                                <p class="counter" id="total-orders"><%= stats.totalOrders %></p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon revenue-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Revenue</h3>
+                                <p class="counter" id="total-revenue">$<%= stats.totalRevenue.toFixed(2) %></p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon user-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Users</h3>
+                                <p class="counter" id="total-users"><%= stats.totalUsers %></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts">
+                        <div class="chart-container">
+                            <h3>Monthly Sales</h3>
+                            <canvas id="sales-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Top Products</h3>
+                            <canvas id="products-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="recent-activities">
+                        <h3>Recent Activities</h3>
+                        <div class="activity-list" id="recent-activities-list">
+                            <!-- Activities will be loaded dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other sections will be loaded dynamically -->
+            </main>
+        </div>
+
+        <!-- Include all the modals and other sections from admin-dashboard.html -->
+        <%- include('partials/admin-modals') %>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/admin-dashboard.js"></script>
+</body>
+</html>
